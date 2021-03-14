@@ -10,17 +10,25 @@ Please be careful when using this to create flashing lights, as this could trigg
 - Python 3 (tested with 3.7.2)
 - python-mbedtls (see below)
 - Hue bridge v2 with at least api version 1.22
-- Hue Entertainment-compatible lights
+- Up to 10 Hue Entertainment-compatible lights in one group
 
-### Building python-mbedtls
+### Building python-mbedtls for Windows
 
 python-mbedtls is currently not available as prebuilt package for Windows in pip.
 This will probably change in the future, as the maintainer is working on a CI pipeline to provide python wheels
 in upcoming releases.
+Also, a small patch in mbedtls is required, as the check they use is not valid on Windows (the value for 
+FD_SETSIZE cannot be easily determinted, as it depends on the value used to build the Python sockets module, end even
+that seems not to be correct). Disabling the check should _only_ be done on Windows!
 
-Building requires can be done with e.g. VS 2019 Community.
+Building can be done with e.g. VS 2019 Community.
+
+First, get and build mbedtls:
 1. Clone mbedtls (I used v2.26.0 from https://github.com/ARMmbed/mbedtls)
-2. Patch the socket check for Windows:
+2. Patch the socket check for Windows with the patch below
+3. Build with CMake in a VSDevCmd shell: 
+  - `cmake -S . -B build -DCMAKE_BUILD_TYPE=Release -DCMAKE_INSTALL_PREFIX=build_install`
+  - `cmake --build build --target install`
 
 ```diff
 diff --git a/library/net_sockets.c b/library/net_sockets.c
@@ -37,15 +45,12 @@ index ad1ac13fb..bc3b12b95 100644
 +    //     return( MBEDTLS_ERR_NET_POLL_FAILED );
 ```
 
-3. Build with CMake in a VSDevCmd shell: 
-  a. `cmake -S . -B build -DCMAKE_BUILD_TYPE=Release -DCMAKE_INSTALL_PREFIX=build_install`
-  b. `cmake --build build --target install`
-
-4. Clone python-mbedtls (master from https://github.com/Synss/python-mbedtls)
-5. Set the env variables INCLUDE and LIBPATH to the just-built mbedtls:
-  a. `set INCLUDE=..\mbedtls\build_install\include`
-  b. `set LIBPATH=..\mbedtls\build_install\lib`
-6. Build python-mbedtls: `python setup.py install`
+Then get and build python-mbedtls:
+1. Clone python-mbedtls (master from https://github.com/Synss/python-mbedtls)
+2. Set the env variables INCLUDE and LIBPATH to the just-built mbedtls:
+  - `set INCLUDE=..\mbedtls\build_install\include`
+  - `set LIBPATH=..\mbedtls\build_install\lib`
+3. Build python-mbedtls: `python setup.py install`
 
 
 ## Usage
@@ -80,4 +85,4 @@ shutdown the Hue connection before exiting.
 ## Restrictions / Caveats
 
 - Supports one Entertainment group on one bridge
-- Support one Art-Net Universe
+- Supports one Art-Net Universe
