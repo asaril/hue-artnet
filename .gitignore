@@ -1,0 +1,6 @@
+.vscode
+
+.pycache
+*.pyc
+
+config.json

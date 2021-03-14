@@ -1,0 +1,22 @@
+{
+    "hue":{
+        "ip": "192.168.178.200",
+        "username": "<username as ascii string>",
+        "clientkey": "<key as ascii hex string>",
+        "group": "<group name as ascii string>"
+    },
+    "art-net":{
+        "ip": "0.0.0.0",
+        "port": 6454,
+        "universe": 0
+    },
+    "mapping": [
+        {"start": 1, "light": 38},
+        {"start": 4, "light": 37},
+        {"start": 7, "light": 36},
+        {"start": 10, "light": 35},
+        {"start": 13, "light": 31},
+        {"start": 16, "light": 33},
+        {"start": 19, "light": 32}
+    ]
+}
