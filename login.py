@@ -1,3 +1,6 @@
+# SPDX-License-Identifier: MIT
+# Copyright (c) 2021, Patrick Moessler
+
 import requests
 
 ip = input('push link button and enter bridge ip:')
